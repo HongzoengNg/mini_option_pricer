@@ -4,7 +4,7 @@ import numpy as np
 from scipy.stats import norm
 
 
-class OptionPricer:
+class BinaryTree:
 
     def __init__(self, type, S0, K, T, sigma, r, q):
         """
