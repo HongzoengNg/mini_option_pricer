@@ -14,6 +14,7 @@ class aritasian_opt(object):
             self.vol = vol*np.sqrt((n+1)*(2*n+1)/(6*n**2))
             self.u = 0.5*self.vol**2+(rate-0.5*vol**2)*(n+1)/(2*n)
             self.val = np.dtype(np.float32)
+            self.N = n
             self.path=path
             self.ctl_var=ctl_var
         else:
@@ -54,8 +55,8 @@ class aritasian_opt(object):
 
     def value(self):
         d1,d2 = self.d1_d2()
-        dt=0.01
-        N=int(self.T/dt)
+        N=self.N
+        dt=self.T/float(N)
         drift=np.exp((self.r-0.5*self.vol**2)*dt)
         if str.upper(self.type) == 'C':
             geo_c = np.exp(-self.r*self.T)*(self.s0*np.exp(self.u*self.T)*norm.cdf(d1)-self.K*norm.cdf(d2))
