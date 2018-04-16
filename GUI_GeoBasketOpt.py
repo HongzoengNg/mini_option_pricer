@@ -1,9 +1,9 @@
 import tkinter as tk 
 from tkinter import ttk
-import aritbasket_option_pricer as abop
+import geobasket_option_pricer as gbop
 
 #future_type, asset_price1, asset_price2,mature_time,strike_price,rate,vol1,vol2,rol
-def mainCal(typ, asset_price1, asset_price2, mature_time, strike_price, rate, vol1, vol2, rol, path, ctl_car):
+def mainCal(typ, asset_price1, asset_price2, mature_time, strike_price, rate, vol1, vol2, rol):
     if typ == 'Call Option':
         tp = 'c'
     elif typ == 'Put Option':
@@ -17,15 +17,11 @@ def mainCal(typ, asset_price1, asset_price2, mature_time, strike_price, rate, vo
     vol2 = float(vol2)
     rate = float(rate)
     rol = float(rol)
-    path = int(path)
 
     #future_type, asset_price1, asset_price2,mature_time,strike_price,rate,vol1,vol2,rol
-    abopx = abop.aritbasket_opt(tp, asset_price1, asset_price2, mature_time, strike_price, rate, vol1, vol2, rol, path, ctl_var)
-    value = abopx.value()
+    gbopx = gbop.geobasket_opt(tp, asset_price1, asset_price2, mature_time, strike_price, rate, vol1, vol2, rol)
 
-    text12['text'] = value[0]
-    text14['text'] = value[1]
-
+    text10['text'] = gbopx.value()
 
 def main():
     win = tk.Tk()
@@ -86,31 +82,13 @@ def main():
     entry8.grid(row=8, column=1)
 
 
-    text9 = tk.Label(win, text = 'Control Variate: ').grid(row=9) 
-    ctl_var = tk.BooleanVar()
-    ctl_var.set(True)
-    check9 = ttk.Checkbutton(win, variable=ctl_var).grid(row=9, column=1)
- 
-
-
-    text10 = tk.Label(win, text = 'Monte Carlo Path: ').grid(row=10) 
-    path = tk.StringVar()
-    entry10 = ttk.Entry(win, textvariable = path)
-    entry10.grid(row=10, column=1)
-    path.set(10000)
-
-    text11 = tk.Label(win, text = 'Price: ').grid(row=11) 
-    text12 = tk.Label(win)
-    text12.grid(row=11, column=1)
-
-
-    text13 = tk.Label(win, text = '95% Confidence Interval: ').grid(row=12)
-    text14 = tk.Label(win)
-    text14.grid(row=12, column=1)
+    text9 = tk.Label(win, text = 'Price: ').grid(row=9) 
+    text10 = tk.Label(win)
+    text10.grid(row=9, column=1)
 
     #future_type, asset_price1, asset_price2,mature_time,strike_price,rate,vol1,vol2,rol
     button = tk.ttk.Button(win, text="Calculate", command=lambda : mainCal(typex.get(), priceA1.get(), priceA2.get(), \
-                    timeM.get(), priceK.get(), rate.get(), vol1.get(), vol2.get(), rol.get(), path.get(), ctl_var.get()))
+                    timeM.get(), priceK.get(), rate.get(), vol1.get(), vol2.get(), rol.get()))
     button.grid()
 
 
