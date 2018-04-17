@@ -1,9 +1,9 @@
 import tkinter as tk 
 from tkinter import ttk
-import euro_option_pricer as eop
+import implied_vol as ipv
 
 
-def mainCal(typ, asset_price, strike_price, mature_time, vol, rate, repo_q):
+def mainCal(typ, asset_price, strike_price, mature_time, rate, repo_q, observeP):
     if typ == 'Call Option':
         tp = 'c'
     elif typ == 'Put Option':
@@ -12,18 +12,19 @@ def mainCal(typ, asset_price, strike_price, mature_time, vol, rate, repo_q):
     asset_price = float(asset_price)
     strike_price = float(strike_price)
     mature_time = float(mature_time)
-    vol = float(vol)
     rate = float(rate)
     repo_q = float(repo_q)
+    observeP = float(observeP)
 
-    eopx = eop.euro_opt(tp, asset_price, strike_price, mature_time, vol, rate,repo_q)
+    #Type,S0,K,T,r,q,V
+    iv = ipv.imp_vol(tp, asset_price, strike_price, mature_time, rate, repo_q, observeP)
 
-    text8['text'] = eopx.value()
+    text8['text'] = iv
 
 
 def main():
     win = tk.Tk()
-    win.title("European Option Pricer")
+    win.title("Implied Volatility Calculation")
 
 
     text0 = tk.Label(win, text = 'Choose Asset Type: ').grid(row=0) 
@@ -51,30 +52,30 @@ def main():
     entry3.grid(row=3, column=1)
 
 
-    text4 = tk.Label(win, text = 'Volatility: ').grid(row=4) 
-    vol = tk.StringVar()
-    entry4 = tk.Entry(win, textvariable = vol)
+    text4 = tk.Label(win, text = 'Risk Free Rate: ').grid(row=4)
+    rate = tk.StringVar()
+    entry4 = tk.Entry(win, textvariable = rate)
     entry4.grid(row=4, column=1)
 
 
-    text5 = tk.Label(win, text = 'Risk Free Rate: ').grid(row=5)
-    rate = tk.StringVar()
-    entry5 = tk.Entry(win, textvariable = rate)
+    text5 = tk.Label(win, text = 'Repo Rate: ').grid(row=5) 
+    repoR = tk.StringVar()
+    entry5 = tk.Entry(win, textvariable = repoR)
     entry5.grid(row=5, column=1)
 
 
-    text6 = tk.Label(win, text = 'Repo Rate: ').grid(row=6) 
-    repoR = tk.StringVar()
-    entry6 = tk.Entry(win, textvariable = repoR)
+    text6 = tk.Label(win, text = 'Observable Value: ').grid(row=6) 
+    observeP = tk.StringVar()
+    entry6 = tk.Entry(win, textvariable = observeP)
     entry6.grid(row=6, column=1)
 
 
-    text7 = tk.Label(win, text = 'Price:').grid(row=7) 
+    text7 = tk.Label(win, text = 'Implied Volatility: ').grid(row=7) 
     text8 = tk.Label(win)
     text8.grid(row=7, column=1)
 
 
-    button = tk.ttk.Button(win, text="Calculate", command=lambda : mainCal(typex.get(), priceA.get(), priceK.get(), timeM.get(), vol.get(), rate.get(), repoR.get()))
+    button = tk.ttk.Button(win, text="Calculate", command=lambda : mainCal(typex.get(), priceA.get(), priceK.get(), timeM.get(), rate.get(), repoR.get(), observeP.get()))
     button.grid()
 
 
