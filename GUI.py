@@ -603,7 +603,7 @@ def arithbCal(text1, text2, typ, asset_price1, asset_price2, mature_time, strike
 win = tk.Tk()
 win.title("Assigment 3")
 win.config(bg='ghost white')
-win.geometry("400x380") 
+win.geometry("380x380") 
 win.resizable(0, 0) 
 
 text0 = tk.Label(win, text='European Option Pricer:', font=("Helvetica", 16), height=2)
