@@ -33,6 +33,7 @@ class aritasian_opt(object):
             Z=np.random.standard_normal(N)
             growthFactor=drift*np.exp(self.vol*np.sqrt(dt)*Z)
             s_path[0]=self.s0*growthFactor[0]
+            #s_path[0]=self.s0
             for i in range(1,N):
                 s_path[i]=s_path[i-1]*growthFactor[i]
             aritmean=np.mean(s_path)
@@ -40,7 +41,7 @@ class aritasian_opt(object):
             if opt_type=='C':
                 arit_spath.append(np.exp(-self.r*self.T)*max(aritmean-self.K,0))
                 geo_spath.append(np.exp(-self.r*self.T)*max(geomean-self.K,0))
-            else:
+            elif opt_type=='P':
                 arit_spath.append(np.exp(-self.r*self.T)*max(-aritmean+self.K,0))
                 geo_spath.append(np.exp(-self.r*self.T)*max(-geomean+self.K,0))
         # control variate
@@ -73,18 +74,18 @@ class aritasian_opt(object):
                     self._val=value
                 return self._val,confcv
             else:
-                value=np.mean(arit_spath)
+                value=np.mean(arit_spath+geo_c)
                 if value=='nan':
                     self._val=0
                 else:
                     self._val=value
                 return self._val,confmc
         elif str.upper(self.type) == 'P':
-            geo_c = np.exp(-self.r*self.T)*(self.K*norm.cdf(-d2)-self.s0*np.exp(self.u*self.T)*norm.cdf(-d1))
+            geo_p = np.exp(-self.r*self.T)*(self.K*norm.cdf(-d2)-self.s0*np.exp(self.u*self.T)*norm.cdf(-d1))
             arit_spath,geo_spath,theta,confmc=self._cal(drift,dt,N,self.type)
             if self.ctl_var==True:
                 # control version
-                Z=arit_spath+theta*(geo_c-geo_spath)
+                Z=arit_spath+theta*(geo_p-geo_spath)
                 value=np.mean(Z)
                 Zst=np.std(Z)
                 confcv=[value-1.96*Zst/np.sqrt(self.path),value+1.96*Zst/np.sqrt(self.path)]
